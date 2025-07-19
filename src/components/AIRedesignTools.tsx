@@ -1,17 +1,42 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Wand2, Upload, Download, Eye, Palette, Layout, Sparkles, Globe } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
+import { Wand2, Upload, Download, Eye, Palette, Layout, Sparkles, Globe, CreditCard, Star } from "lucide-react";
 
 export function AIRedesignTools() {
   const [websiteUrl, setWebsiteUrl] = useState("");
   const [designPrompt, setDesignPrompt] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisProgress, setAnalysisProgress] = useState(0);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [generatedPalette, setGeneratedPalette] = useState<string[]>([]);
+  const [isGeneratingPalette, setIsGeneratingPalette] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const pricingPlans = [
+    { 
+      name: "Basic Analysis", 
+      price: 25, 
+      features: ["Website Analysis", "Basic Recommendations", "Color Palette", "1 Design Template"] 
+    },
+    { 
+      name: "Professional Redesign", 
+      price: 75, 
+      features: ["Complete Analysis", "Custom Redesign", "Multiple Templates", "Export Code", "Priority Support"] 
+    },
+    { 
+      name: "Enterprise Package", 
+      price: 150, 
+      features: ["Full Redesign Suite", "Multiple Websites", "Advanced Analytics", "Custom Development", "24/7 Support"] 
+    }
+  ];
 
   const designTemplates = [
     { name: "Modern Minimalist", category: "Business", preview: "Clean, spacious design with subtle animations" },
@@ -39,11 +64,84 @@ export function AIRedesignTools() {
         if (prev >= 100) {
           clearInterval(interval);
           setIsAnalyzing(false);
+          toast.success("Website analysis complete! AI recommendations generated.");
           return 100;
         }
         return prev + 10;
       });
     }, 300);
+  };
+
+  const handleUploadFiles = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    setUploadedFiles(prev => [...prev, ...files]);
+    toast.success(`${files.length} file(s) uploaded successfully!`);
+  };
+
+  const handleExportRedesign = () => {
+    if (!websiteUrl && uploadedFiles.length === 0) {
+      toast.error("Please analyze a website or upload design files first.");
+      return;
+    }
+    
+    // Simulate export process
+    toast.loading("Generating redesign files...");
+    setTimeout(() => {
+      // Create downloadable content
+      const redesignData = {
+        website: websiteUrl,
+        prompt: designPrompt,
+        timestamp: new Date().toISOString(),
+        recommendations: [
+          "Implement modern CSS Grid layout",
+          "Add dark mode toggle",
+          "Optimize for mobile-first design",
+          "Improve color contrast ratios",
+          "Add micro-interactions"
+        ]
+      };
+      
+      const blob = new Blob([JSON.stringify(redesignData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'ai-redesign-recommendations.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      toast.success("Redesign exported successfully!");
+    }, 2000);
+  };
+
+  const generateColorPalette = () => {
+    setIsGeneratingPalette(true);
+    
+    // Generate random modern color palette
+    setTimeout(() => {
+      const palettes = [
+        ["#6366f1", "#8b5cf6", "#06b6d4", "#10b981", "#f59e0b"],
+        ["#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6"],
+        ["#1f2937", "#374151", "#6b7280", "#9ca3af", "#d1d5db"],
+        ["#7c3aed", "#a855f7", "#c084fc", "#ddd6fe", "#ede9fe"],
+        ["#059669", "#34d399", "#6ee7b7", "#a7f3d0", "#d1fae5"]
+      ];
+      
+      const randomPalette = palettes[Math.floor(Math.random() * palettes.length)];
+      setGeneratedPalette(randomPalette);
+      setIsGeneratingPalette(false);
+      toast.success("Color palette generated!");
+    }, 1500);
+  };
+
+  const handlePurchase = (plan: typeof pricingPlans[0]) => {
+    toast.success(`Redirecting to payment for ${plan.name} - $${plan.price}`);
+    // Here you would integrate with your payment processor
   };
 
   return (
@@ -150,20 +248,155 @@ export function AIRedesignTools() {
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex flex-wrap gap-4 justify-center">
-        <Button className="bg-gradient-primary hover:opacity-90">
-          <Upload className="w-4 h-4 mr-2" />
-          Upload Design Files
-        </Button>
-        <Button variant="outline">
-          <Download className="w-4 h-4 mr-2" />
-          Export Redesign
-        </Button>
-        <Button variant="outline">
-          <Palette className="w-4 h-4 mr-2" />
-          Color Palette Generator
-        </Button>
+      {/* Pricing Plans */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-center">Choose Your Plan</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {pricingPlans.map((plan, index) => (
+            <Card key={index} className={`relative hover:shadow-glow transition-all duration-300 ${index === 1 ? 'border-primary shadow-elegant' : ''}`}>
+              {index === 1 && (
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <Badge className="bg-gradient-primary text-white px-3 py-1">
+                    <Star className="w-3 h-3 mr-1" />
+                    Popular
+                  </Badge>
+                </div>
+              )}
+              <CardHeader className="text-center">
+                <CardTitle className="text-xl">{plan.name}</CardTitle>
+                <div className="text-3xl font-bold text-primary">${plan.price}</div>
+                <CardDescription>Per analysis</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <ul className="space-y-2">
+                  {plan.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-center gap-2 text-sm">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <Button 
+                  className={`w-full ${index === 1 ? 'bg-gradient-primary hover:opacity-90' : ''}`}
+                  variant={index === 1 ? 'default' : 'outline'}
+                  onClick={() => handlePurchase(plan)}
+                >
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  Get Started
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Functional Tools */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Upload Design Files */}
+        <Card className="hover:shadow-glow transition-all duration-300">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Upload className="w-5 h-5" />
+              Upload Design Files
+            </CardTitle>
+            <CardDescription>
+              Upload your current design files for analysis
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept=".png,.jpg,.jpeg,.pdf,.sketch,.fig,.psd"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            <Button 
+              onClick={handleUploadFiles}
+              className="w-full bg-gradient-primary hover:opacity-90"
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Choose Files
+            </Button>
+            {uploadedFiles.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-sm font-medium">Uploaded Files:</p>
+                {uploadedFiles.map((file, idx) => (
+                  <div key={idx} className="text-xs bg-secondary p-2 rounded">
+                    {file.name}
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Export Redesign */}
+        <Card className="hover:shadow-glow transition-all duration-300">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Download className="w-5 h-5" />
+              Export Redesign
+            </CardTitle>
+            <CardDescription>
+              Download AI-generated recommendations and code
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button 
+              onClick={handleExportRedesign}
+              variant="outline"
+              className="w-full"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Export Results
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Color Palette Generator */}
+        <Card className="hover:shadow-glow transition-all duration-300">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Palette className="w-5 h-5" />
+              Color Palette Generator
+            </CardTitle>
+            <CardDescription>
+              Generate modern color schemes for your design
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Button 
+              onClick={generateColorPalette}
+              disabled={isGeneratingPalette}
+              variant="outline"
+              className="w-full"
+            >
+              <Palette className="w-4 h-4 mr-2" />
+              {isGeneratingPalette ? "Generating..." : "Generate Palette"}
+            </Button>
+            {generatedPalette.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-sm font-medium">Generated Palette:</p>
+                <div className="flex gap-1">
+                  {generatedPalette.map((color, idx) => (
+                    <div
+                      key={idx}
+                      className="w-8 h-8 rounded cursor-pointer border border-border"
+                      style={{ backgroundColor: color }}
+                      title={color}
+                      onClick={() => {
+                        navigator.clipboard.writeText(color);
+                        toast.success(`Copied ${color} to clipboard!`);
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
