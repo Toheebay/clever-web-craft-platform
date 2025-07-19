@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,13 @@ import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Wand2, Upload, Download, Eye, Palette, Layout, Sparkles, Globe, CreditCard, Star } from "lucide-react";
+import { Wand2, Upload, Download, Eye, Palette, Layout, Sparkles, Globe, CreditCard, Star, Lock, Unlock } from "lucide-react";
+
+declare global {
+  interface Window {
+    FlutterwaveCheckout: (params: any) => void;
+  }
+}
 
 export function AIRedesignTools() {
   const [websiteUrl, setWebsiteUrl] = useState("");
@@ -18,7 +24,24 @@ export function AIRedesignTools() {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [generatedPalette, setGeneratedPalette] = useState<string[]>([]);
   const [isGeneratingPalette, setIsGeneratingPalette] = useState(false);
+  const [hasPaid, setHasPaid] = useState(false);
+  const [passcode, setPasscode] = useState("");
+  const [showPasscodeInput, setShowPasscodeInput] = useState(false);
+  const [paymentEmail, setPaymentEmail] = useState("");
+  const [paymentName, setPaymentName] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const PASSCODE = "ADEBAYOadebayo12AJANIajani";
+
+  // Check access on component mount
+  useEffect(() => {
+    const paidStatus = localStorage.getItem('ai_redesign_paid');
+    const validPasscode = localStorage.getItem('ai_redesign_passcode');
+    
+    if (paidStatus === 'true' || validPasscode === PASSCODE) {
+      setHasPaid(true);
+    }
+  }, []);
 
   const pricingPlans = [
     { 
@@ -139,10 +162,142 @@ export function AIRedesignTools() {
     }, 1500);
   };
 
-  const handlePurchase = (plan: typeof pricingPlans[0]) => {
-    toast.success(`Redirecting to payment for ${plan.name} - $${plan.price}`);
-    // Here you would integrate with your payment processor
+  const handlePasscodeSubmit = () => {
+    if (passcode === PASSCODE) {
+      setHasPaid(true);
+      localStorage.setItem('ai_redesign_passcode', PASSCODE);
+      setShowPasscodeInput(false);
+      toast.success("Access granted! Welcome to AI Redesign Tools.");
+    } else {
+      toast.error("Invalid passcode. Please try again.");
+    }
   };
+
+  const handleFlutterwavePayment = (plan: typeof pricingPlans[0]) => {
+    if (!paymentName || !paymentEmail) {
+      toast.error("Please fill in your name and email for payment.");
+      return;
+    }
+
+    if (!window.FlutterwaveCheckout) {
+      toast.error("Payment system not loaded. Please refresh the page.");
+      return;
+    }
+
+    window.FlutterwaveCheckout({
+      public_key: "FLWPUBK-3d0e062fa50b5b538affc64535245178-X",
+      tx_ref: "tx-" + Date.now(),
+      amount: plan.price,
+      currency: "USD",
+      payment_options: "card,ussd,banktransfer",
+      customer: {
+        email: paymentEmail,
+        name: paymentName,
+      },
+      callback: function (data: any) {
+        console.log(data);
+        if (data.status === "successful") {
+          setHasPaid(true);
+          localStorage.setItem('ai_redesign_paid', 'true');
+          toast.success(`Payment successful! Welcome to ${plan.name}`);
+        } else {
+          toast.error("Payment failed. Please try again.");
+        }
+      },
+      customizations: {
+        title: "AI Redesign Tools",
+        description: `Payment for ${plan.name} - Premium AI Website Redesign`,
+        logo: "https://your-logo-url.com",
+      },
+    });
+  };
+
+  // If user hasn't paid, show payment/passcode screen
+  if (!hasPaid) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <Card className="max-w-md w-full shadow-elegant">
+          <CardHeader className="text-center">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Lock className="w-8 h-8 text-primary" />
+              <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                AI Redesign Access
+              </h1>
+            </div>
+            <CardDescription>
+              Premium AI-powered website redesign tools require payment or valid access code
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Payment Form */}
+            <div className="space-y-4">
+              <h3 className="font-semibold text-center">Payment Information</h3>
+              <Input
+                placeholder="Full Name"
+                value={paymentName}
+                onChange={(e) => setPaymentName(e.target.value)}
+              />
+              <Input
+                type="email"
+                placeholder="Email Address"
+                value={paymentEmail}
+                onChange={(e) => setPaymentEmail(e.target.value)}
+              />
+              
+              <div className="grid gap-4">
+                {pricingPlans.map((plan, index) => (
+                  <Button
+                    key={index}
+                    onClick={() => handleFlutterwavePayment(plan)}
+                    className={`w-full ${index === 1 ? 'bg-gradient-primary hover:opacity-90' : ''}`}
+                    variant={index === 1 ? 'default' : 'outline'}
+                  >
+                    <CreditCard className="w-4 h-4 mr-2" />
+                    Pay ${plan.price} - {plan.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            {/* Passcode Section */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">Or</span>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Button
+                variant="outline"
+                onClick={() => setShowPasscodeInput(!showPasscodeInput)}
+                className="w-full"
+              >
+                <Unlock className="w-4 h-4 mr-2" />
+                Enter Access Code
+              </Button>
+              
+              {showPasscodeInput && (
+                <div className="space-y-2">
+                  <Input
+                    type="password"
+                    placeholder="Enter passcode"
+                    value={passcode}
+                    onChange={(e) => setPasscode(e.target.value)}
+                  />
+                  <Button onClick={handlePasscodeSubmit} className="w-full">
+                    Verify Access Code
+                  </Button>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -279,7 +434,7 @@ export function AIRedesignTools() {
                 <Button 
                   className={`w-full ${index === 1 ? 'bg-gradient-primary hover:opacity-90' : ''}`}
                   variant={index === 1 ? 'default' : 'outline'}
-                  onClick={() => handlePurchase(plan)}
+                  onClick={() => toast.info("Please use the payment form above to purchase this plan.")}
                 >
                   <CreditCard className="w-4 h-4 mr-2" />
                   Get Started
