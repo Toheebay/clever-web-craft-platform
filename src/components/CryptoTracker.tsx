@@ -234,14 +234,39 @@ export function CryptoTracker() {
     return initialValue > 0 ? ((currentValue - initialValue) / initialValue) * 100 : 0;
   };
 
+  const [currency, setCurrency] = useState<'USD' | 'NGN'>('USD');
+  const [passcodeInput, setPasscodeInput] = useState('');
+  const [showPasscodeDialog, setShowPasscodeDialog] = useState(false);
+
+  const PREMIUM_PASSCODE = "ADEBAYOadebayo12AJANIajani";
+
+  const handlePasscodeSubmit = () => {
+    if (passcodeInput === PREMIUM_PASSCODE) {
+      setIsPremium(true);
+      setShowPasscodeDialog(false);
+      setPasscodeInput('');
+      toast({
+        title: "Access Granted!",
+        description: "Premium features unlocked!",
+      });
+    } else {
+      toast({
+        title: "Invalid Passcode",
+        description: "Please try again or contact support.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const upgradeToPremium = () => {
-    // Flutterwave payment integration for Premium upgrade
+    const amount = currency === 'USD' ? 25 : 11000; // $25 or ₦11,000
+    
     if (typeof window !== 'undefined' && (window as any).FlutterwaveCheckout) {
       (window as any).FlutterwaveCheckout({
         public_key: "FLWPUBK-3d0e062fa50b5b538affc64535245178-X",
         tx_ref: "premium-" + Date.now(),
-        amount: 2500, // $25 in cents
-        currency: "NGN",
+        amount: amount,
+        currency: currency,
         payment_options: "card,ussd,banktransfer",
         customer: {
           email: "user@example.com",
@@ -258,7 +283,7 @@ export function CryptoTracker() {
         customizations: {
           title: "Crypto Tracker Premium",
           description: "Unlock unlimited portfolio tracking and alerts",
-          logo: "https://your-logo-url.com",
+          logo: "",
         },
       });
     } else {
@@ -274,18 +299,43 @@ export function CryptoTracker() {
       {/* Premium Upgrade Banner */}
       {!isPremium && (
         <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center space-x-4">
-                <Crown className="h-8 w-8 text-primary" />
+                <Crown className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
                 <div>
-                  <h3 className="text-lg font-semibold">Upgrade to Premium</h3>
-                  <p className="text-sm text-muted-foreground">Unlimited portfolio tracking, price alerts & advanced analytics</p>
+                  <h3 className="text-base sm:text-lg font-semibold">Upgrade to Premium</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Unlimited portfolio tracking, price alerts & advanced analytics</p>
                 </div>
               </div>
-              <Button onClick={upgradeToPremium} className="bg-primary hover:bg-primary/90">
-                Upgrade for $25
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowPasscodeDialog(true)}
+                  className="text-xs"
+                >
+                  Use Passcode
+                </Button>
+                <div className="flex gap-1">
+                  <Button
+                    variant={currency === 'USD' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setCurrency('USD')}
+                  >
+                    $25
+                  </Button>
+                  <Button
+                    variant={currency === 'NGN' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setCurrency('NGN')}
+                  >
+                    ₦11K
+                  </Button>
+                </div>
+                <Button onClick={upgradeToPremium} className="bg-primary hover:bg-primary/90">
+                  Upgrade
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -566,6 +616,33 @@ export function CryptoTracker() {
           )}
         </TabsContent>
       </Tabs>
+
+      {/* Passcode Dialog */}
+      <Dialog open={showPasscodeDialog} onOpenChange={setShowPasscodeDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Enter Premium Passcode</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Input
+              type="password"
+              placeholder="Enter passcode"
+              value={passcodeInput}
+              onChange={(e) => setPasscodeInput(e.target.value)}
+              className="w-full"
+              onKeyDown={(e) => e.key === 'Enter' && handlePasscodeSubmit()}
+            />
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setShowPasscodeDialog(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handlePasscodeSubmit}>
+                Submit
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Search, Bell, Menu, TrendingUp, CheckSquare, Wand2 } from "lucide-react";
 
 interface HeaderProps {
@@ -68,6 +69,7 @@ export function Header({ activeView, onViewChange }: HeaderProps) {
 
         {/* Actions */}
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <Button variant="ghost" size="icon" className="relative">
             <Bell className="w-4 h-4" />
             <Badge className="absolute -top-1 -right-1 w-2 h-2 p-0 bg-accent">
