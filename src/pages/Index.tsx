@@ -2,16 +2,19 @@ import { useState } from "react";
 import { Header } from "@/components/Header";
 import { CryptoTracker } from "@/components/CryptoTracker";
 import { TaskManager } from "@/components/TaskManager";
+import { AIRedesignTools } from "@/components/AIRedesignTools";
 
 const Index = () => {
-  const [activeView, setActiveView] = useState<'crypto' | 'tasks'>('crypto');
+  const [activeView, setActiveView] = useState<'crypto' | 'tasks' | 'redesign'>('crypto');
 
   return (
     <div className="min-h-screen bg-background">
       <Header activeView={activeView} onViewChange={setActiveView} />
       
       <main className="container mx-auto px-4 py-8">
-        {activeView === 'crypto' ? <CryptoTracker /> : <TaskManager />}
+        {activeView === 'crypto' && <CryptoTracker />}
+        {activeView === 'tasks' && <TaskManager />}
+        {activeView === 'redesign' && <AIRedesignTools />}
       </main>
       
       {/* Floating background elements */}

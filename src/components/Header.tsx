@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Bell, Menu, TrendingUp, CheckSquare } from "lucide-react";
+import { Search, Bell, Menu, TrendingUp, CheckSquare, Wand2 } from "lucide-react";
 
 interface HeaderProps {
-  activeView: 'crypto' | 'tasks';
-  onViewChange: (view: 'crypto' | 'tasks') => void;
+  activeView: 'crypto' | 'tasks' | 'redesign';
+  onViewChange: (view: 'crypto' | 'tasks' | 'redesign') => void;
 }
 
 export function Header({ activeView, onViewChange }: HeaderProps) {
@@ -26,7 +26,7 @@ export function Header({ activeView, onViewChange }: HeaderProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-4">
           <Button
             variant={activeView === 'crypto' ? 'default' : 'ghost'}
             onClick={() => onViewChange('crypto')}
@@ -42,6 +42,14 @@ export function Header({ activeView, onViewChange }: HeaderProps) {
           >
             <CheckSquare className="w-4 h-4" />
             Task Manager
+          </Button>
+          <Button
+            variant={activeView === 'redesign' ? 'default' : 'ghost'}
+            onClick={() => onViewChange('redesign')}
+            className="flex items-center gap-2"
+          >
+            <Wand2 className="w-4 h-4" />
+            AI Redesign
           </Button>
         </nav>
 
