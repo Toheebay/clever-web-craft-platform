@@ -1,13 +1,24 @@
+import * as React from "react";
 import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Search, Bell, Menu, TrendingUp, CheckSquare, Wand2 } from "lucide-react";
+
+// ✅ Only this one import from lucide-react is needed
+import {
+  Search,
+  Bell,
+  Menu,
+  TrendingUp,
+  CheckSquare,
+  Wand2,
+} from "lucide-react";
 
 interface HeaderProps {
-  activeView: 'crypto' | 'tasks' | 'redesign';
-  onViewChange: (view: 'crypto' | 'tasks' | 'redesign') => void;
+  activeView: "crypto" | "tasks" | "redesign";
+  onViewChange: (view: "crypto" | "tasks" | "redesign") => void;
 }
 
 export function Header({ activeView, onViewChange }: HeaderProps) {
@@ -29,24 +40,24 @@ export function Header({ activeView, onViewChange }: HeaderProps) {
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-4">
           <Button
-            variant={activeView === 'crypto' ? 'default' : 'ghost'}
-            onClick={() => onViewChange('crypto')}
+            variant={activeView === "crypto" ? "default" : "ghost"}
+            onClick={() => onViewChange("crypto")}
             className="flex items-center gap-2"
           >
             <TrendingUp className="w-4 h-4" />
             Crypto Tracker
           </Button>
           <Button
-            variant={activeView === 'tasks' ? 'default' : 'ghost'}
-            onClick={() => onViewChange('tasks')}
+            variant={activeView === "tasks" ? "default" : "ghost"}
+            onClick={() => onViewChange("tasks")}
             className="flex items-center gap-2"
           >
             <CheckSquare className="w-4 h-4" />
             Task Manager
           </Button>
           <Button
-            variant={activeView === 'redesign' ? 'default' : 'ghost'}
-            onClick={() => onViewChange('redesign')}
+            variant={activeView === "redesign" ? "default" : "ghost"}
+            onClick={() => onViewChange("redesign")}
             className="flex items-center gap-2"
           >
             <Wand2 className="w-4 h-4" />
@@ -72,8 +83,7 @@ export function Header({ activeView, onViewChange }: HeaderProps) {
           <ThemeToggle />
           <Button variant="ghost" size="icon" className="relative">
             <Bell className="w-4 h-4" />
-            <Badge className="absolute -top-1 -right-1 w-2 h-2 p-0 bg-accent">
-            </Badge>
+            <Badge className="absolute -top-1 -right-1 w-2 h-2 p-0 bg-accent" />
           </Button>
           <Button variant="ghost" size="icon" className="md:hidden">
             <Menu className="w-4 h-4" />
