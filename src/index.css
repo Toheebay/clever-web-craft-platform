@@ -2,188 +2,97 @@
 @tailwind components;
 @tailwind utilities;
 
-<<<<<<< HEAD
-/* Modern Multi-Theme Design System */
-
+/* Dark Professional E-commerce Theme */
 @layer base {
   :root {
-    /* Light Theme (default) */
+    /* Dark Professional Base */
+    --background: 222 84% 4.9%;
+    --foreground: 210 40% 98%;
+    
+    --card: 222 84% 6%;
+    --card-foreground: 210 40% 98%;
+    
+    --popover: 222 84% 6%;
+    --popover-foreground: 210 40% 98%;
+    
+    /* Neon Accent Colors */
+    --primary: 267 100% 75%; /* Neon Purple */
+    --primary-foreground: 222 84% 4.9%;
+    --primary-glow: 267 100% 85%;
+    
+    --secondary: 190 100% 50%; /* Neon Cyan */
+    --secondary-foreground: 222 84% 4.9%;
+    --secondary-glow: 190 100% 60%;
+    
+    --accent: 310 100% 60%; /* Neon Pink */
+    --accent-foreground: 222 84% 4.9%;
+    --accent-glow: 310 100% 70%;
+    
+    --success: 142 100% 50%; /* Neon Green */
+    --success-foreground: 222 84% 4.9%;
+    --success-glow: 142 100% 60%;
+    
+    --warning: 48 100% 50%; /* Neon Yellow */
+    --warning-foreground: 222 84% 4.9%;
+    
+    --destructive: 0 100% 60%; /* Neon Red */
+    --destructive-foreground: 210 40% 98%;
+    
+    --muted: 222 84% 8%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+    
+    --border: 222 84% 12%;
+    --input: 222 84% 8%;
+    --ring: 267 100% 75%;
+    
+    --radius: 0.75rem;
+    
+    /* E-commerce Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(267 100% 75%), hsl(310 100% 60%));
+    --gradient-secondary: linear-gradient(135deg, hsl(190 100% 50%), hsl(267 100% 75%));
+    --gradient-accent: linear-gradient(135deg, hsl(310 100% 60%), hsl(0 100% 60%));
+    --gradient-card: linear-gradient(145deg, hsl(222 84% 6%), hsl(222 84% 8%));
+    --gradient-cta: linear-gradient(135deg, hsl(142 100% 50%), hsl(190 100% 50%));
+    
+    /* Professional Shadows */
+    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.3);
+    --shadow-glow-accent: 0 0 40px hsl(var(--accent) / 0.3);
+    --shadow-glow-secondary: 0 0 40px hsl(var(--secondary) / 0.3);
+    --shadow-card: 0 8px 32px hsl(0 0% 0% / 0.4);
+    --shadow-navbar: 0 4px 20px hsl(0 0% 0% / 0.3);
+    
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    /* Sidebar */
+    --sidebar-background: 222 84% 3%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 267 100% 75%;
+    --sidebar-primary-foreground: 222 84% 4.9%;
+    --sidebar-accent: 222 84% 8%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 222 84% 12%;
+    --sidebar-ring: 267 100% 75%;
+  }
+  
+  /* Light mode fallback */
+  .light {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
-
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 221.2 83.2% 53.3%;
+    --primary: 267 100% 65%;
     --primary-foreground: 210 40% 98%;
-    --primary-glow: 221.2 83.2% 63.3%;
-
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 84% 4.9%;
-
+    --secondary: 190 100% 40%;
+    --secondary-foreground: 210 40% 98%;
+    --accent: 310 100% 50%;
+    --accent-foreground: 210 40% 98%;
     --muted: 210 40% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 84% 4.9%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --success: 142 76% 36%;
-    --success-foreground: 210 40% 98%;
-
-    --warning: 38 92% 50%;
-    --warning-foreground: 222.2 84% 4.9%;
-
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-
-    --radius: 0.75rem;
-
-    /* Custom gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)));
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(var(--secondary)));
-    
-    /* Shadows */
-    --shadow-glow: 0 0 30px hsl(var(--primary) / 0.15);
-    --shadow-card: 0 8px 32px hsl(0 0% 0% / 0.12);
-    
-    /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  /* Dark Theme */
-  .dark {
-    --background: 220 13% 9%;
-    --foreground: 220 9% 98%;
-=======
-:root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 47.4% 11.2%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 222.2 84% 4.9%;
-
-  --primary: 222.2 47.4% 11.2%;
-  --primary-foreground: 210 40% 98%;
-  --primary-glow: 222.2 47.4% 40%;
->>>>>>> 2fa7b69 (Fix: removed backend submodule and unified backend with main repo)
-
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-
-  --destructive: 0 100% 50%;
-  --destructive-foreground: 210 40% 98%;
-
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 47.4% 11.2%;
-
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 47.4% 11.2%;
-
-  --sidebar-background: 222.2 47.4% 10%;
-  --sidebar-foreground: 210 40% 98%;
-  --sidebar-primary: 210 100% 45%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 45 100% 51%;
-  --sidebar-accent-foreground: 0 0% 0%;
-  --sidebar-border: 222.2 47.4% 25%;
-  --sidebar-ring: 210 40% 75%;
-
-  --radius: 0.5rem;
-  --gradient-primary: linear-gradient(to right, #4f46e5, #3b82f6);
-  --gradient-accent: linear-gradient(to right, #f59e0b, #f97316);
-  --gradient-card: linear-gradient(to right, #ffffff, #f3f4f6);
-
-  --shadow-glow: 0 0 20px hsl(var(--primary) / 0.4);
-  --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.05);
-
-<<<<<<< HEAD
-    --border: 220 12% 20%;
-    --input: 220 12% 16%;
-    --ring: 142 76% 36%;
-
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  /* Blue Theme */
-  .theme-blue {
-    --background: 214 100% 97%;
-    --foreground: 214 100% 7%;
-
-    --card: 214 100% 100%;
-    --card-foreground: 214 100% 7%;
-
-    --primary: 214 100% 50%;
-    --primary-foreground: 214 100% 97%;
-    --primary-glow: 214 100% 60%;
-
-    --secondary: 214 30% 94%;
-    --secondary-foreground: 214 100% 7%;
-
-    --muted: 214 30% 94%;
-    --muted-foreground: 214 20% 40%;
-
-    --accent: 200 100% 50%;
-    --accent-foreground: 214 100% 97%;
-
-    --border: 214 30% 88%;
-    --input: 214 30% 88%;
-    --ring: 214 100% 50%;
-  }
-
-  /* Green Theme */
-  .theme-green {
-    --background: 120 60% 97%;
-    --foreground: 120 60% 7%;
-
-    --card: 120 60% 100%;
-    --card-foreground: 120 60% 7%;
-
-    --primary: 120 60% 40%;
-    --primary-foreground: 120 60% 97%;
-    --primary-glow: 120 60% 50%;
-
-    --secondary: 120 20% 94%;
-    --secondary-foreground: 120 60% 7%;
-
-    --muted: 120 20% 94%;
-    --muted-foreground: 120 20% 40%;
-
-    --accent: 140 80% 45%;
-    --accent-foreground: 120 60% 97%;
-
-    --border: 120 20% 88%;
-    --input: 120 20% 88%;
-    --ring: 120 60% 40%;
+    --ring: 267 100% 65%;
   }
 }
 
@@ -191,11 +100,106 @@
   * {
     @apply border-border;
   }
-
+  
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
-=======
-  --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
->>>>>>> 2fa7b69 (Fix: removed backend submodule and unified backend with main repo)
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/50 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary;
+  }
+}
+
+@layer components {
+  /* CTA Button Styles */
+  .cta-button {
+    @apply relative overflow-hidden bg-gradient-to-r from-primary to-accent 
+           text-primary-foreground font-semibold py-3 px-6 rounded-lg 
+           transition-all duration-300 hover:scale-105 hover:shadow-glow
+           focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+  }
+  
+  .cta-button::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-accent to-primary opacity-0 
+           transition-opacity duration-300;
+  }
+  
+  .cta-button:hover::before {
+    @apply opacity-100;
+  }
+  
+  .cta-button-text {
+    @apply relative z-10;
+  }
+  
+  /* Neon Border Animation */
+  .neon-border {
+    @apply relative;
+  }
+  
+  .neon-border::before {
+    content: '';
+    @apply absolute -inset-1 bg-gradient-to-r from-primary via-accent to-secondary 
+           rounded-lg blur-sm opacity-75 -z-10 animate-pulse;
+  }
+  
+  /* Card Hover Effects */
+  .product-card {
+    @apply bg-card border border-border rounded-lg p-6 transition-all duration-300
+           hover:border-primary/50 hover:shadow-glow hover:scale-[1.02];
+  }
+  
+  /* Navigation Pills */
+  .nav-pill {
+    @apply px-4 py-2 rounded-full transition-all duration-300 font-medium;
+  }
+  
+  .nav-pill.active {
+    @apply bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-glow;
+  }
+  
+  .nav-pill:not(.active) {
+    @apply text-muted-foreground hover:text-foreground hover:bg-muted;
+  }
+  
+  /* Glow Text */
+  .glow-text {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+    filter: drop-shadow(0 0 10px hsl(var(--primary) / 0.5));
+  }
+  
+  /* Pulse Animation */
+  .pulse-neon {
+    animation: pulse-neon 2s ease-in-out infinite alternate;
+  }
+  
+  @keyframes pulse-neon {
+    from {
+      text-shadow: 0 0 10px hsl(var(--primary)), 0 0 20px hsl(var(--primary)), 0 0 30px hsl(var(--primary));
+    }
+    to {
+      text-shadow: 0 0 5px hsl(var(--primary)), 0 0 10px hsl(var(--primary)), 0 0 15px hsl(var(--primary));
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 }
